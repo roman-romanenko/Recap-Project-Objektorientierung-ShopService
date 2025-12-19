@@ -36,4 +36,34 @@ class ShopServiceTest {
         //THEN
         assertNull(actual);
     }
+
+    @Test
+    void getOrdersByStatus_returnsOnlyProcessingOrders() {
+        // GIVEN
+        ShopService shopService = new ShopService();
+        List<String> productIds = List.of("1");
+
+        // WHEN
+        shopService.addOrder(productIds);
+        List<Order> processingOrders =
+                shopService.getOrdersByStatus(OrderStatus.PROCESSING);
+
+        // THEN
+        assertEquals(1, processingOrders.size());
+        assertEquals(OrderStatus.PROCESSING, processingOrders.get(0).orderStatus());
+    }
+
+    @Test
+    void getOrdersByStatus_returnsEmptyArrayListOrders_whenThereAreNoOrdersWithCorrectStatus() {
+        // GIVEN
+        ShopService shopService = new ShopService();
+        List<String> productIds = List.of("1");
+
+        // WHEN
+        shopService.addOrder(productIds);
+        List<Order> completedOrders = shopService.getOrdersByStatus(OrderStatus.COMPLETED);
+
+        // THEN
+        assertEquals(0, completedOrders.size());
+    }
 }

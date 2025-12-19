@@ -2,6 +2,7 @@ import order.Order;
 import order.OrderStatus;
 import org.junit.jupiter.api.Test;
 import product.Product;
+import product.ProductNotFoundException;
 
 import java.util.List;
 
@@ -25,16 +26,14 @@ class ShopServiceTest {
     }
 
     @Test
-    void addOrderTest_whenInvalidProductId_expectNull() {
-        //GIVEN
+    void addOrder_throwsException_whenProductNotFound() {
         ShopService shopService = new ShopService();
         List<String> productsIds = List.of("1", "2");
 
-        //WHEN
-        Order actual = shopService.addOrder(productsIds);
-
-        //THEN
-        assertNull(actual);
+        assertThrows(
+                ProductNotFoundException.class,
+                () -> shopService.addOrder(productsIds)
+        );
     }
 
     @Test

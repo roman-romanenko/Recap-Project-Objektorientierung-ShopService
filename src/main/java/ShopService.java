@@ -3,11 +3,11 @@ import order.OrderMapRepo;
 import order.OrderRepo;
 import order.OrderStatus;
 import product.Product;
+import product.ProductNotFoundException;
 import product.ProductRepo;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -18,14 +18,12 @@ public class ShopService {
     public Order addOrder(List<String> productIds) {
         List<Product> products = new ArrayList<>();
         for (String productId : productIds) {
-            Optional<Product> optionalProductToOrder = productRepo.getProductById(productId);
+            Product product = productRepo.getProductById(productId)
+                    .orElseThrow(() ->
+                            new ProductNotFoundException(productId)
+                    );
 
-            if (optionalProductToOrder.isEmpty()) {
-                System.out.println("product.Product mit der Id: " + productId + " konnte nicht bestellt werden!");
-                return null;
-            }
-
-            products.add(optionalProductToOrder.get());
+            products.add(product);
         }
 
         Order newOrder = new Order(UUID.randomUUID().toString(), products, OrderStatus.PROCESSING);

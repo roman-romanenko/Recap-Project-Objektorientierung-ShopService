@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 public class OrderMapRepo implements OrderRepo{
-    private Map<String, Order> orders = new HashMap<>();
+    private final Map<String, Order> orders = new HashMap<>();
 
     @Override
     public List<Order> getOrders() {
@@ -22,6 +22,12 @@ public class OrderMapRepo implements OrderRepo{
     public Order addOrder(Order newOrder) {
         orders.put(newOrder.id(), newOrder);
         return newOrder;
+    }
+
+    @Override
+    public Order updateOrder(Order updatedOrder) {
+        orders.put(updatedOrder.id(), updatedOrder);
+        return updatedOrder;
     }
 
     @Override

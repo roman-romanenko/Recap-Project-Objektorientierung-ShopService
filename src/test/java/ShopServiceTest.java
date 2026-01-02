@@ -1,8 +1,10 @@
 import order.Order;
+import order.OrderMapRepo;
 import order.OrderStatus;
 import org.junit.jupiter.api.Test;
 import product.Product;
 import product.ProductNotFoundException;
+import product.ProductRepo;
 
 import java.util.List;
 
@@ -64,5 +66,43 @@ class ShopServiceTest {
 
         // THEN
         assertEquals(0, completedOrders.size());
+    }
+
+    @Test
+    void updateOrderStatus_shouldUpdateOrderStatus() {
+        // GIVEN
+        ShopService shopService = new ShopService();
+        List<String> productIds = List.of("1");
+        Order order = shopService.addOrder(productIds);
+
+        // WHEN
+        Order updatedOrder = shopService.updateOrderStatus(order, OrderStatus.COMPLETED);
+
+        // THEN
+        assertEquals(OrderStatus.COMPLETED, updatedOrder.orderStatus());
+
+        List<Order> completedOrders = shopService.getOrdersByStatus(OrderStatus.COMPLETED);
+
+        assertEquals(1, completedOrders.size());
+    }
+
+    @Test
+    void updateOrderStatusById_shouldUpdateOrderStatusByOrderId() {
+        // GIVEN
+        ShopService shopService = new ShopService();
+        List<String> productIds = List.of("1");
+        Order order = shopService.addOrder(productIds);
+        String orderId = order.id();
+
+        // WHEN
+        Order updatedOrder = shopService.updateOrderStatusById(orderId, OrderStatus.COMPLETED);
+
+        // THEN
+        assertEquals(OrderStatus.COMPLETED, updatedOrder.orderStatus());
+
+        List<Order> completedOrders = shopService.getOrdersByStatus(OrderStatus.COMPLETED);
+
+        assertEquals(1, completedOrders.size());
+
     }
 }
